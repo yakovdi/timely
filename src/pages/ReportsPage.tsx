@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
@@ -43,7 +42,6 @@ export default function ReportsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 10;
   
-  // נתוני דוגמה לגרף - במערכת אמיתית יגיעו מהשרת
   const attendanceData = [
     { name: 'ינואר', totalHours: 168, expectedHours: 176 },
     { name: 'פברואר', totalHours: 160, expectedHours: 160 },
@@ -61,10 +59,8 @@ export default function ReportsPage() {
   ];
 
   useEffect(() => {
-    // טעינת רשומות נוכחות מהלוקל סטורג'
     const savedRecords = localStorage.getItem("attendanceRecords");
     if (savedRecords) {
-      // המרת תאריכים מחזרה מ-JSON
       const records: AttendanceRecord[] = JSON.parse(savedRecords).map((record: any) => ({
         ...record,
         timestamp: new Date(record.timestamp)
@@ -73,26 +69,21 @@ export default function ReportsPage() {
     }
   }, []);
 
-  // חישוב מדדים לדוח
   const totalRecords = attendanceRecords.length;
   const approvedRecords = attendanceRecords.filter(record => record.approved).length;
   const unapprovedRecords = totalRecords - approvedRecords;
   
-  // חישוב מספר הדפים
   const totalPages = Math.ceil(attendanceRecords.length / recordsPerPage);
   
-  // מיון הרשומות לפי תאריך (מהחדש לישן)
   const sortedRecords = [...attendanceRecords].sort((a, b) => 
     b.timestamp.getTime() - a.timestamp.getTime()
   );
   
-  // הרשומות בדף הנוכחי
   const currentRecords = sortedRecords.slice(
     (currentPage - 1) * recordsPerPage,
     currentPage * recordsPerPage
   );
   
-  // פורמט התאריך והשעה
   const formatDateTime = (date: Date) => {
     return new Intl.DateTimeFormat('he-IL', {
       year: 'numeric',
@@ -103,7 +94,6 @@ export default function ReportsPage() {
     }).format(date);
   };
   
-  // אישור רשומות נוכחות
   const approveRecord = (recordId: number) => {
     const updatedRecords = attendanceRecords.map(record => 
       record.id === recordId ? { ...record, approved: true } : record
@@ -243,7 +233,7 @@ export default function ReportsPage() {
                       <PaginationItem>
                         <PaginationPrevious 
                           onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                          disabled={currentPage === 1}
+                          className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
                         />
                       </PaginationItem>
                       
@@ -288,7 +278,7 @@ export default function ReportsPage() {
                       <PaginationItem>
                         <PaginationNext 
                           onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                          disabled={currentPage === totalPages}
+                          className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
                         />
                       </PaginationItem>
                     </PaginationContent>

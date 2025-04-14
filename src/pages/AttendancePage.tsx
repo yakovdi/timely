@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Clock, LogIn, LogOut } from "lucide-react";
@@ -52,7 +51,8 @@ export default function AttendancePage() {
       userId: Number(selectedUserId),
       userName: users.find(u => u.id === Number(selectedUserId))?.name || '',
       type: 'clockIn',
-      timestamp: now
+      timestamp: now,
+      approved: false // Adding the required approved property
     };
     
     setAttendanceHistory(prev => [...prev, record]);
@@ -70,7 +70,8 @@ export default function AttendancePage() {
       userId: Number(selectedUserId),
       userName: users.find(u => u.id === Number(selectedUserId))?.name || '',
       type: 'clockOut',
-      timestamp: now
+      timestamp: now,
+      approved: false // Adding the required approved property
     };
     
     setAttendanceHistory(prev => [...prev, record]);
